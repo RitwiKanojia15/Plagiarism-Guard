@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Plagiarism AI Detector - Upload</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-v2">
+    <div class="dash-shell">
+        <aside class="dash-sidebar">
+            <div class="dash-brand">
+                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
+                <div>
+                    <div class="dash-brand-title">Plagiarism Guard</div>
+                </div>
+            </div>
+
+            <nav class="dash-nav">
+                <a class="dash-link" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
+                <a class="dash-link active" href="{{ url_for('web.upload_page') }}">Upload</a>
+                <a class="dash-link" href="{{ url_for('web.result_page') }}">Results</a>
+                <a class="dash-link" href="{{ url_for('web.dashboard_page') }}#about">About</a>
+            </nav>
+
+            <div class="dash-side-status">
+                <p class="small">Ready for full plagiarism or AI-only analysis.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
+            <button class="btn btn-secondary btn-sm dash-logout" id="logoutBtn" type="button">Logout</button>
+        </aside>
+
+        <main class="dash-main">
+            <section class="dash-hero">
+                <span class="hero-kicker">Submit Document</span>
+                <h1>Upload and Analyze</h1>
+                <p>Choose full plagiarism mode with references or AI-only mode for stylometric evaluation.</p>
+                <div class="nav-row">
+                    <a class="btn btn-secondary" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
+                    <a class="btn btn-secondary" href="{{ url_for('web.result_page') }}">View Last Result</a>
+                </div>
+            </section>
+
+            <section class="dash-panel">
+                <form id="analysisForm">
+                    <div class="field">
+                        <label>Analysis Mode</label>
+                        <div class="mode-toggle">
+                            <label class="radio-card">
+                                <input type="radio" name="analysisMode" value="full" checked>
+                                <span>Full (Plagiarism + AI)</span>
+                            </label>
+                            <label class="radio-card">
+                                <input type="radio" name="analysisMode" value="ai_only">
+                                <span>AI-only</span>
+                            </label>
+                        </div>
+                        <p class="small">Full mode requires reference texts/files. AI-only analyzes writing style without references.</p>
+                    </div>
+
+                    <div class="field">
+                        <label for="targetText">Target Text</label>
+                        <textarea id="targetText" placeholder="Paste text to evaluate..."></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label for="targetFile">Or upload Target File (TXT/PDF/DOC/DOCX)</label>
+                        <div class="drop-zone" id="targetDropZone">
+                            <p>Drop target file here or click to choose.</p>
+                            <input id="targetFile" type="file" accept=".txt,.md,.csv,.json,.log,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        </div>
+                        <div id="targetFileChips" class="file-chips"></div>
+                    </div>
+
+                    <div id="referenceSection">
+                        <div class="field">
+                            <label>Reference Source Texts</label>
+                            <div id="sourcesList" class="sources-list">
+                                <textarea class="source-input" placeholder="Paste source/reference text #1"></textarea>
+                            </div>
+                            <div class="nav-row">
+                                <button type="button" class="btn btn-secondary" id="addSourceBtn">Add Source Box</button>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label for="sourceFiles">Or upload Reference Files</label>
+                            <div class="drop-zone" id="sourceDropZone">
+                                <p>Drop one or more reference files here or click to choose.</p>
+                                <input id="sourceFiles" type="file" accept=".txt,.md,.csv,.json,.log,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" multiple>
+                            </div>
+                            <div id="sourceFileChips" class="file-chips"></div>
+                        </div>
+                    </div>
+
+                    <div class="nav-row">
+                        <button class="btn btn-primary" id="analyzeBtn" type="submit">Run Analysis</button>
+                        <button class="btn btn-secondary" id="retryBtn" type="button" disabled>Retry Last Submission</button>
+                    </div>
+
+                    <div id="uploadProgressWrap" class="progress-wrap hidden">
+                        <div class="progress-bar">
+                            <div id="uploadProgressBar" class="progress-fill"></div>
+                        </div>
+                        <div id="uploadProgressText" class="small">Preparing request...</div>
+                    </div>
+
+                    <div id="submitStatus" class="status"></div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+</body>
+</html>
+

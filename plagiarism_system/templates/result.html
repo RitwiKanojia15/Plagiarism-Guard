@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Plagiarism AI Detector - Results</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
+</head>
+<body class="dashboard-v2">
+    <div class="dash-shell">
+        <aside class="dash-sidebar">
+            <div class="dash-brand">
+                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
+                <div>
+                    <div class="dash-brand-title">Plagiarism Guard</div>
+                    
+                </div>
+            </div>
+
+            <nav class="dash-nav">
+                <a class="dash-link" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
+                <a class="dash-link" href="{{ url_for('web.upload_page') }}">Upload</a>
+                <a class="dash-link active" href="{{ url_for('web.result_page') }}">Results</a>
+                <a class="dash-link" href="{{ url_for('web.dashboard_page') }}#about">About</a>
+            </nav>
+
+            <div class="dash-side-status">
+                <p class="small">Review similarity, AI likelihood, and sentence explanations.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
+            <button class="btn btn-secondary btn-sm dash-logout" id="logoutBtn" type="button">Logout</button>
+        </aside>
+
+        <main class="dash-main">
+            <section class="dash-hero">
+                <span class="hero-kicker">Analysis Output</span>
+                <h1>Analysis Report</h1>
+                <p>Structured plagiarism, paraphrase, AI-likelihood, and explainability output.</p>
+                <div class="nav-row">
+                    <a class="btn btn-secondary" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
+                    <a class="btn btn-primary" href="{{ url_for('web.upload_page') }}">New Analysis</a>
+                    <a class="btn btn-secondary hidden" id="downloadPdfBtn" href="#" target="_blank" rel="noopener">Download Analysis PDF</a>
+                </div>
+            </section>
+
+            <section class="grid grid-4">
+                <article class="card">
+                    <div class="metric-label">Total Similarity</div>
+                    <div id="totalSimilarity" class="metric-value metric-danger">0.00%</div>
+                </article>
+                <article class="card">
+                    <div class="metric-label">Exact Plagiarism</div>
+                    <div id="exactPlagiarism" class="metric-value metric-danger">0.00%</div>
+                </article>
+                <article class="card">
+                    <div class="metric-label">Paraphrased</div>
+                    <div id="paraphrasedContent" class="metric-value metric-warning">0.00%</div>
+                </article>
+                <article class="card">
+                    <div class="metric-label">AI Probability</div>
+                    <div id="aiLikelihood" class="metric-value metric-info">0.00%</div>
+                </article>
+                <article class="card">
+                    <div class="metric-label">Confidence</div>
+                    <div id="confidenceScore" class="metric-value">0.00%</div>
+                    <span id="confidenceBadge" class="badge">unknown</span>
+                </article>
+                <article class="card">
+                    <div class="metric-label">Mode</div>
+                    <div id="analysisMode" class="metric-value">FULL</div>
+                </article>
+            </section>
+
+            <section class="grid grid-2">
+                <article class="card">
+                    <h3>Sentence-Level Highlighting</h3>
+                    <div class="legend-row">
+                        <span class="legend-item legend-copied">Copied</span>
+                        <span class="legend-item legend-paraphrased">Paraphrased</span>
+                        <span class="legend-item legend-ai">AI-likely</span>
+                        <span class="legend-item legend-unique">Unique</span>
+                    </div>
+                    <div class="filter-row">
+                        <button class="btn btn-secondary filter-btn active" data-filter="all" type="button">All</button>
+                        <button class="btn btn-secondary filter-btn" data-filter="copied" type="button">Copied</button>
+                        <button class="btn btn-secondary filter-btn" data-filter="paraphrased" type="button">Paraphrased</button>
+                        <button class="btn btn-secondary filter-btn" data-filter="ai_likely" type="button">AI-likely</button>
+                        <button class="btn btn-secondary filter-btn" data-filter="unique" type="button">Unique</button>
+                    </div>
+                    <div id="highlightedSentences" class="highlight-panel"></div>
+                </article>
+                <article class="card">
+                    <h3>Top Feature Contributions</h3>
+                    <div class="chart-wrap">
+                        <canvas id="featureImportanceChart"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <section class="grid grid-2">
+                <article class="card">
+                    <h3>AI Probability Bar</h3>
+                    <div class="chart-wrap">
+                        <canvas id="aiProbabilityChart"></canvas>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>Stylometry Radar</h3>
+                    <div class="chart-wrap">
+                        <canvas id="stylometryRadarChart"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <section class="card">
+                <h3>Semantic Similarity Heatmap</h3>
+                <p class="small">Matrix values are cosine similarities between target and source sentences.</p>
+                <div class="chart-wrap">
+                    <canvas id="similarityHeatmap"></canvas>
+                </div>
+                <div id="heatmapNote" class="small"></div>
+            </section>
+
+            <div id="resultStatus" class="status"></div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/result.js') }}"></script>
+</body>
+</html>
+

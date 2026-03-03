@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Hybrid Plagiarism AI Detector</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-v2">
+    <div class="auth-shell-v2">
+        <section class="auth-brand-panel">
+            <div class="auth-brand-row">
+                <img class="auth-brand-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
+                <div>
+                    <h1 class="auth-brand-title">Plagiarism Guard</h1>
+                    <p class="auth-brand-subtitle">Document Intelligence Workspace</p>
+                </div>
+            </div>
+
+            <h2 class="auth-hero-title">Welcome back</h2>
+            <p class="auth-hero-text">
+                Upload, paste, and compare text with lexical, semantic, and AI-assisted analysis.
+                Review sentence-level highlights and export polished reports.
+            </p>
+            <ul class="auth-bullets">
+                <li>Sentence-level copied/paraphrased/AI-likely detection</li>
+                <li>Open-access references and explainable scoring</li>
+                <li>Saved reports and PDF export</li>
+            </ul>
+        </section>
+
+        <section class="auth-form-panel">
+            <div class="auth-tools-row">
+                <span class="auth-kicker">Secure Access</span>
+                <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
+            </div>
+            <h2>Sign in</h2>
+            <p class="small">Use your account to continue to dashboard.</p>
+
+            <form id="loginForm">
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input id="email" type="text" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" autocomplete="current-password" required>
+                </div>
+                <div class="nav-row">
+                    <button class="btn btn-primary" type="submit">Login</button>
+                    <a class="btn btn-secondary" href="{{ url_for('web.register_page') }}">Create account</a>
+                </div>
+                <div id="authStatus" class="status"></div>
+            </form>
+
+            <p class="small">New here? <a class="auth-link" href="{{ url_for('web.register_page') }}">Register now</a></p>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Plagiarism AI Detector - Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-v2">
+    <div class="dash-shell">
+        <aside class="dash-sidebar">
+            <div class="dash-brand">
+                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
+                <div>
+                    <div class="dash-brand-title">Plagiarism Guard</div>
+                </div>
+            </div>
+
+            <nav class="dash-nav">
+                <a class="dash-link active" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
+                <a class="dash-link" href="{{ url_for('web.upload_page') }}">Upload</a>
+                <a class="dash-link" href="{{ url_for('web.result_page') }}">Results</a>
+                <a class="dash-link" href="#about">About</a>
+            </nav>
+
+            <div class="dash-side-status" id="healthStatus"></div>
+            <button class="btn btn-secondary btn-sm dash-logout" data-logout-btn="true" type="button">Logout</button>
+        </aside>
+
+        <main class="dash-main">
+            <section class="dash-hero">
+                <div class="dash-hero-top">
+                    <span class="hero-kicker">Dashboard</span>
+                    <div class="dash-hero-controls">
+                        <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
+                        <div class="profile-menu" id="profileMenu">
+                            <button class="profile-menu-trigger" id="profileMenuBtn" type="button" aria-haspopup="true" aria-expanded="false">
+                                <span class="profile-avatar" id="profileAvatar">U</span>
+                                <span class="profile-trigger-name" id="profileTriggerName">Profile</span>
+                                <span class="profile-caret" aria-hidden="true">▼</span>
+                            </button>
+                            <div class="profile-dropdown" id="profileDropdown">
+                                <div class="profile-dropdown-head">
+                                    <span class="profile-avatar profile-avatar-large" id="profileAvatarLarge">U</span>
+                                    <div>
+                                        <div class="profile-name" id="profileFullName">User</div>
+                                        <div class="profile-email" id="profileEmail">user@example.com</div>
+                                    </div>
+                                </div>
+                                <a class="profile-link" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
+                                <a class="profile-link" href="{{ url_for('web.upload_page') }}">Upload</a>
+                                <a class="profile-link" href="{{ url_for('web.result_page') }}">Results</a>
+                                <button class="profile-logout" data-logout-btn="true" type="button">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h1 id="welcomeTitle">Welcome</h1>
+                <p id="welcomeSubtext">
+                    Research-level analysis pipeline combining lexical, semantic, stylometric,
+                    AI ensemble, citation-aware scoring, and explainability.
+                </p>
+                <div class="nav-row">
+                    <a class="btn btn-primary" href="{{ url_for('web.upload_page') }}">Upload & Analyze</a>
+                    <a class="btn btn-secondary" href="{{ url_for('web.result_page') }}">View Last Result</a>
+                </div>
+            </section>
+
+            <section class="dash-panel">
+                <div class="dash-panel-head">
+                    <h3>Recent Reports</h3>
+                    <p class="small">Latest analyses associated with your account.</p>
+                </div>
+                <div id="recentReports" class="report-list"></div>
+            </section>
+
+            <section id="about" class="dash-panel">
+                <div class="dash-panel-head">
+                    <h3>About Plagiarism Guard</h3>
+                </div>
+                <p class="small">
+                    Plagiarism Guard is a hybrid analysis platform that combines lexical matching, semantic similarity,
+                    stylometric profiling, and AI-writing detection into one workflow.
+                </p>
+                <p class="small">
+                    It supports PDF/DOC/DOCX/TXT inputs, reference-aware plagiarism checks, AI-only analysis mode,
+                    sentence-level labeling (Copied, Paraphrased, AI-likely, Unique), and downloadable PDF reports.
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

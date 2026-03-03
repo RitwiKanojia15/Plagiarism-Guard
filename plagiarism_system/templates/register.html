@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Hybrid Plagiarism AI Detector</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-v2">
+    <div class="auth-shell-v2">
+        <section class="auth-brand-panel">
+            <div class="auth-brand-row">
+                <img class="auth-brand-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
+                <div>
+                    <h1 class="auth-brand-title">Plagiarism Guard</h1>
+                    <p class="auth-brand-subtitle">Document Intelligence Workspace</p>
+                </div>
+            </div>
+
+            <h2 class="auth-hero-title">Create your workspace</h2>
+            <p class="auth-hero-text">
+                Register once to manage uploads, view source-matched insights, and access
+                detailed report history from one unified dashboard.
+            </p>
+            <ul class="auth-bullets">
+                <li>Track analysis history and exported reports</li>
+                <li>Switch between full and AI-focused modes</li>
+                <li>Keep your account and documents secured</li>
+            </ul>
+        </section>
+
+        <section class="auth-form-panel">
+            <div class="auth-tools-row">
+                <span class="auth-kicker">Create Workspace</span>
+                <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
+            </div>
+            <h2>Create account</h2>
+            <p class="small">Register before logging in to access upload and analysis features.</p>
+
+            <form id="registerForm">
+                <div class="field">
+                    <label for="fullName">Full Name</label>
+                    <input id="fullName" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input id="email" type="text" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" autocomplete="new-password" required>
+                </div>
+                <div class="nav-row">
+                    <button class="btn btn-primary" type="submit">Register</button>
+                    <a class="btn btn-secondary" href="{{ url_for('web.login_page') }}">Back to login</a>
+                </div>
+                <div id="authStatus" class="status"></div>
+            </form>
+
+            <p class="small">Already registered? <a class="auth-link" href="{{ url_for('web.login_page') }}">Sign in</a></p>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+</body>
+</html>
+
