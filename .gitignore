@@ -18,3 +18,8 @@ env/
 
 # Environment variables
 .env
+
+# Node (if frontend exists)
+node_modules/
+dist/
+build/
