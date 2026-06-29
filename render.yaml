@@ -4,7 +4,7 @@ services:
     runtime: python
     region: oregon
     plan: starter
-    buildCommand: pip install -r plagiarism_system/requirements-prod.txt
+    buildCommand: pip install --no-cache-dir -r plagiarism_system/requirements-prod.txt
     startCommand: python plagiarism_system/run.py
     envVars:
       - key: PLAGIARISM_SYSTEM_SECRET_KEY
