@@ -32,4 +32,6 @@ except Exception:  # pragma: no cover - fallback for environments without starle
 
 
 if __name__ == "__main__":
-    flask_app.run(host="0.0.0.0", port=10000, debug=False)
+    import os
+    port = int(os.getenv("PORT", 10000))
+    flask_app.run(host="0.0.0.0", port=port, debug=False)

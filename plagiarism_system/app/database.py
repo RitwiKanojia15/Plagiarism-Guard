@@ -10,7 +10,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 
-DB_PATH = Path(__file__).resolve().parents[1] / "plagiarism_system.db"
+import os as _os
+
+_render_data = Path("/data")
+if _render_data.exists() and _render_data.is_dir():
+    DB_PATH = _render_data / "plagiarism_system.db"
+else:
+    DB_PATH = Path(_os.getenv("DB_PATH", str(Path(__file__).resolve().parents[1] / "plagiarism_system.db")))
+
 DATABASE_URL = f"sqlite:///{DB_PATH.as_posix()}"
 
 engine = create_engine(

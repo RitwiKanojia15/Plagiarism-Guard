@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: plagiarism-guard
+    runtime: python
+    region: oregon
+    plan: starter
+    rootDir: plagiarism_system
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run.py
+    envVars:
+      - key: PLAGIARISM_SYSTEM_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
