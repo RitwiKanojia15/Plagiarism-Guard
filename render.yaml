@@ -11,7 +11,7 @@ services:
       - key: PLAGIARISM_SYSTEM_SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.11.9
     disk:
       name: data
       mountPath: /data
