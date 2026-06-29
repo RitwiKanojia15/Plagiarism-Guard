@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlagAI Check - History</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-v2">
+    <div class="dash-shell">
+        <aside class="dash-sidebar">
+            <div class="dash-brand">
+                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260404') }}" alt="PG logo">
+                <div class="dash-brand-title">PlagAI Check</div>
+            </div>
+
+            <nav class="dash-nav">
+                <a class="dash-link dash-link-dashboard" href="{{ url_for('web.dashboard_page') }}"><span class="dash-link-icon">D</span><span class="dash-link-label">Dashboard</span></a>
+                <a class="dash-link dash-link-new-scan" href="{{ url_for('web.upload_page') }}"><span class="dash-link-icon">N</span><span class="dash-link-label">New Scan</span></a>
+                <a class="dash-link dash-link-reports" href="{{ url_for('web.result_page') }}"><span class="dash-link-icon">R</span><span class="dash-link-label">Reports</span></a>
+                <a class="dash-link dash-link-history active" href="{{ url_for('web.history_page') }}"><span class="dash-link-icon">H</span><span class="dash-link-label">History</span></a>
+                <a class="dash-link dash-link-settings" href="{{ url_for('web.settings_page') }}"><span class="dash-link-icon">S</span><span class="dash-link-label">Settings</span></a>
+            </nav>
+
+            <div class="dash-side-status" id="historyStatus"></div>
+            <button class="btn btn-secondary btn-sm dash-logout" id="logoutBtn" type="button">Logout</button>
+        </aside>
+
+        <main class="dash-main">
+            <section class="dash-hero">
+                <div class="dash-hero-top">
+                    <span class="hero-kicker">History</span>
+                </div>
+                <h1>Scan History</h1>
+                <p>All previous analyses for your account, including mode, similarity, AI score, and report PDF links.</p>
+            </section>
+
+            <section class="dash-panel">
+                <div class="dash-panel-head">
+                    <h3>Recent Analysis Records</h3>
+                    <p class="small">Automatically loaded from your account history.</p>
+                </div>
+                <div id="historyReports" class="report-list"></div>
+            </section>
+
+            <footer class="app-footer">
+                <a href="{{ url_for('web.dashboard_page') }}#about">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </footer>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+</body>
+</html>

@@ -7,6 +7,30 @@ function setStatus(message, type = "") {
     node.textContent = message;
 }
 
+function oauthErrorMessage(code) {
+    const mapping = {
+        google_not_configured: "Google signup is not configured on the server yet.",
+        google_state_mismatch: "Google session expired. Please try again.",
+        google_missing_code: "Google did not return an authorization code.",
+        google_token_exchange_failed: "Google token exchange failed. Please retry.",
+        google_missing_access_token: "Google signup failed: missing access token.",
+        google_profile_fetch_failed: "Could not fetch your Google profile.",
+        google_invalid_email: "Google account email is missing or not verified.",
+        google_access_denied: "Google signup was canceled.",
+        google_callback_failed: "Google signup failed unexpectedly. Please retry.",
+    };
+    return mapping[code] || "Google signup failed. Please try again.";
+}
+
+function showOauthErrorFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const oauthError = params.get("oauth_error");
+    if (!oauthError) {
+        return;
+    }
+    setStatus(oauthErrorMessage(oauthError), "error");
+}
+
 async function submitRegistration(event) {
     event.preventDefault();
     const fullName = document.getElementById("fullName").value.trim();
@@ -43,4 +67,4 @@ async function submitRegistration(event) {
 }
 
 document.getElementById("registerForm").addEventListener("submit", submitRegistration);
-
+showOauthErrorFromQuery();

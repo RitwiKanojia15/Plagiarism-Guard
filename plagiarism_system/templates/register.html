@@ -1,43 +1,42 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Hybrid Plagiarism AI Detector</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <title>Register - PlagAI Check</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="auth-v2">
     <div class="auth-shell-v2">
         <section class="auth-brand-panel">
             <div class="auth-brand-row">
-                <img class="auth-brand-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
+                <img class="auth-brand-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260404') }}" alt="PG logo">
                 <div>
-                    <h1 class="auth-brand-title">Plagiarism Guard</h1>
-                    <p class="auth-brand-subtitle">Document Intelligence Workspace</p>
+                    <h1 class="auth-brand-title">PlagAI Check</h1>
+                    <p class="auth-brand-subtitle">Hybrid plagiarism + AI detector</p>
                 </div>
             </div>
 
-            <h2 class="auth-hero-title">Create your workspace</h2>
+            <h2 class="auth-hero-title">Create your account</h2>
             <p class="auth-hero-text">
-                Register once to manage uploads, view source-matched insights, and access
-                detailed report history from one unified dashboard.
+                Register once and manage your uploads, references, result history, and downloadable
+                PDF reports in one place.
             </p>
             <ul class="auth-bullets">
-                <li>Track analysis history and exported reports</li>
-                <li>Switch between full and AI-focused modes</li>
-                <li>Keep your account and documents secured</li>
+                <li>Private account-based scan history</li>
+                <li>Support for PDF, DOC, DOCX, TXT input</li>
+                <li>Copied, paraphrased, AI-likely sentence labels</li>
             </ul>
         </section>
 
         <section class="auth-form-panel">
             <div class="auth-tools-row">
-                <span class="auth-kicker">Create Workspace</span>
-                <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
+                <span class="auth-kicker">Create Account</span>
             </div>
-            <h2>Create account</h2>
-            <p class="small">Register before logging in to access upload and analysis features.</p>
+            <h2>Sign Up</h2>
+            <p class="small">Register first, then log in to run analyses.</p>
 
             <form id="registerForm">
                 <div class="field">
@@ -45,26 +44,37 @@
                     <input id="fullName" type="text" autocomplete="name" required>
                 </div>
                 <div class="field">
-                    <label for="email">Email</label>
+                    <label for="email">Email Address</label>
                     <input id="email" type="text" autocomplete="email" required>
                 </div>
                 <div class="field">
                     <label for="password">Password</label>
                     <input id="password" type="password" autocomplete="new-password" required>
                 </div>
+
+                <label class="auth-check"><input type="checkbox" checked>I agree to the Terms and Privacy Policy</label>
+
                 <div class="nav-row">
-                    <button class="btn btn-primary" type="submit">Register</button>
-                    <a class="btn btn-secondary" href="{{ url_for('web.login_page') }}">Back to login</a>
+                    <button class="btn btn-primary" type="submit">Sign Up</button>
+                    <a class="btn btn-secondary" href="{{ url_for('web.login_page') }}">Back to Login</a>
                 </div>
                 <div id="authStatus" class="status"></div>
             </form>
 
-            <p class="small">Already registered? <a class="auth-link" href="{{ url_for('web.login_page') }}">Sign in</a></p>
+            <div class="auth-divider"><span>or continue with</span></div>
+            <a class="btn btn-secondary auth-google-btn" href="{{ url_for('web.google_login') }}?next={{ url_for('web.dashboard_page') }}">Continue with Google</a>
+            <p class="small auth-bottom-copy">Already have an account? <a class="auth-link" href="{{ url_for('web.login_page') }}">Login</a></p>
         </section>
     </div>
+
+    <footer class="auth-footer">
+        <a href="#">About</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+    </footer>
 
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </body>
 </html>
-

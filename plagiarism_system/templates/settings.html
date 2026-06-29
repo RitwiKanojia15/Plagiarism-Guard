@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlagAI Check - Settings</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-v2">
+    <div class="dash-shell">
+        <aside class="dash-sidebar">
+            <div class="dash-brand">
+                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260404') }}" alt="PG logo">
+                <div class="dash-brand-title">PlagAI Check</div>
+            </div>
+
+            <nav class="dash-nav">
+                <a class="dash-link dash-link-dashboard" href="{{ url_for('web.dashboard_page') }}"><span class="dash-link-icon">D</span><span class="dash-link-label">Dashboard</span></a>
+                <a class="dash-link dash-link-new-scan" href="{{ url_for('web.upload_page') }}"><span class="dash-link-icon">N</span><span class="dash-link-label">New Scan</span></a>
+                <a class="dash-link dash-link-reports" href="{{ url_for('web.result_page') }}"><span class="dash-link-icon">R</span><span class="dash-link-label">Reports</span></a>
+                <a class="dash-link dash-link-history" href="{{ url_for('web.history_page') }}"><span class="dash-link-icon">H</span><span class="dash-link-label">History</span></a>
+                <a class="dash-link dash-link-settings active" href="{{ url_for('web.settings_page') }}"><span class="dash-link-icon">S</span><span class="dash-link-label">Settings</span></a>
+            </nav>
+
+            <div class="dash-side-status" id="settingsStatus"></div>
+            <button class="btn btn-secondary btn-sm dash-logout" id="logoutBtn" type="button">Logout</button>
+        </aside>
+
+        <main class="dash-main">
+            <section class="dash-hero">
+                <div class="dash-hero-top">
+                    <span class="hero-kicker">Settings</span>
+                </div>
+                <h1>Account Settings</h1>
+                <p>Review your account details and manage your active session.</p>
+            </section>
+
+            <section class="dash-panel settings-grid">
+                <article class="card">
+                    <h3>Profile Details</h3>
+                    <div class="info-list">
+                        <div class="info-row">
+                            <div class="info-key">Full Name</div>
+                            <div class="info-value" id="settingsName">-</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-key">Email</div>
+                            <div class="info-value" id="settingsEmail">-</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-key">Member Since</div>
+                            <div class="info-value" id="settingsCreated">-</div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h3>Session Actions</h3>
+                    <p class="small">Use logout to end the current session securely.</p>
+                    <div class="nav-row" style="margin-top: 14px;">
+                        <a class="btn btn-primary" href="{{ url_for('web.upload_page') }}">Start New Scan</a>
+                        <button class="btn btn-secondary" id="secondaryLogoutBtn" type="button">Logout</button>
+                    </div>
+                </article>
+            </section>
+
+            <footer class="app-footer">
+                <a href="{{ url_for('web.dashboard_page') }}#about">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </footer>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+</body>
+</html>

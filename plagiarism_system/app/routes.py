@@ -5,11 +5,14 @@ from __future__ import annotations
 import json
 import os
 import re
+import secrets
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Dict, List, Sequence, Tuple
+from urllib.parse import urlencode
 
-from flask import Blueprint, jsonify, redirect, render_template, request, send_file, url_for
+import requests
+from flask import Blueprint, jsonify, redirect, render_template, request, send_file, session, url_for
 from werkzeug.datastructures import FileStorage
 
 from . import auth
@@ -32,6 +35,12 @@ from plagiarism_system.utils.text_extractor import extract_text
 web_blueprint = Blueprint("web", __name__)
 SUPPORTED_UPLOAD_EXTENSIONS = {".txt", ".md", ".csv", ".json", ".log", ".pdf", ".doc", ".docx"}
 EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+GOOGLE_OAUTH_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+GOOGLE_OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token"
+GOOGLE_OAUTH_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
+GOOGLE_OAUTH_SCOPES = "openid email profile"
+GOOGLE_OAUTH_STATE_KEY = "ps_google_oauth_state"
+GOOGLE_OAUTH_NEXT_KEY = "ps_google_oauth_next"
 
 
 def _serialize_user(user: User) -> Dict[str, object]:
@@ -296,6 +305,37 @@ def _auth_payload() -> Dict[str, str]:
     return {key: str(value or "").strip() for key, value in payload.items()}
 
 
+def _safe_next_path(value: str) -> str:
+    """Allow only local absolute paths for post-login redirects."""
+    target = str(value or "").strip()
+    if not target.startswith("/"):
+        return ""
+    if target.startswith("//"):
+        return ""
+    return target
+
+
+def _google_oauth_config() -> Tuple[str, str, str]:
+    """Get Google OAuth config from environment."""
+    def _read_env(name: str) -> str:
+        value = os.getenv(name, "").strip()
+        if len(value) >= 2 and ((value[0] == value[-1] == "\"") or (value[0] == value[-1] == "'")):
+            value = value[1:-1].strip()
+        return value
+
+    client_id = _read_env("GOOGLE_CLIENT_ID")
+    client_secret = _read_env("GOOGLE_CLIENT_SECRET")
+    redirect_uri = _read_env("GOOGLE_REDIRECT_URI")
+    if not redirect_uri:
+        redirect_uri = url_for("web.google_oauth_callback", _external=True)
+    return client_id, client_secret, redirect_uri
+
+
+def _oauth_error_redirect(error_code: str) -> object:
+    """Redirect OAuth failures back to login with an error code."""
+    return redirect(url_for("web.login_page", oauth_error=error_code))
+
+
 @web_blueprint.get("/")
 def home():
     """Redirect user based on authentication state."""
@@ -330,6 +370,132 @@ def login_page():
 def login_page_html():
     """Backward-compatible login URL alias."""
     return redirect(url_for("web.login_page"))
+
+
+@web_blueprint.get("/api/auth/google/login")
+def google_login():
+    """Start Google OAuth login flow."""
+    client_id, client_secret, redirect_uri = _google_oauth_config()
+    if not client_id or not client_secret:
+        return _oauth_error_redirect("google_not_configured")
+
+    state = secrets.token_urlsafe(24)
+    session_next = _safe_next_path(request.args.get("next", "")) or url_for("web.dashboard_page")
+
+    session[GOOGLE_OAUTH_STATE_KEY] = state
+    session[GOOGLE_OAUTH_NEXT_KEY] = session_next
+
+    params = {
+        "client_id": client_id,
+        "redirect_uri": redirect_uri,
+        "response_type": "code",
+        "scope": GOOGLE_OAUTH_SCOPES,
+        "state": state,
+        "access_type": "offline",
+        "include_granted_scopes": "true",
+        "prompt": "select_account",
+    }
+    return redirect(f"{GOOGLE_OAUTH_AUTH_URL}?{urlencode(params)}")
+
+
+@web_blueprint.get("/api/auth/google/config-status")
+def google_config_status():
+    """Return non-sensitive Google OAuth config status for troubleshooting."""
+    client_id, client_secret, redirect_uri = _google_oauth_config()
+
+    def _mask(value: str) -> str:
+        raw = str(value or "")
+        if not raw:
+            return ""
+        if len(raw) <= 8:
+            return "*" * len(raw)
+        return f"{raw[:4]}...{raw[-4:]}"
+
+    return jsonify(
+        {
+            "google_client_id_present": bool(client_id),
+            "google_client_secret_present": bool(client_secret),
+            "google_client_id_masked": _mask(client_id),
+            "google_redirect_uri": redirect_uri,
+        }
+    )
+
+
+@web_blueprint.get("/api/auth/google/callback")
+def google_oauth_callback():
+    """Handle Google OAuth callback and create/login user."""
+    expected_state = str(session.pop(GOOGLE_OAUTH_STATE_KEY, "") or "")
+    next_url = _safe_next_path(str(session.pop(GOOGLE_OAUTH_NEXT_KEY, "") or "")) or url_for("web.dashboard_page")
+    incoming_state = str(request.args.get("state", "") or "")
+    oauth_error = str(request.args.get("error", "") or "")
+    code = str(request.args.get("code", "") or "")
+
+    if oauth_error:
+        return _oauth_error_redirect(f"google_{oauth_error}")
+    if not expected_state or expected_state != incoming_state:
+        return _oauth_error_redirect("google_state_mismatch")
+    if not code:
+        return _oauth_error_redirect("google_missing_code")
+
+    client_id, client_secret, redirect_uri = _google_oauth_config()
+    if not client_id or not client_secret:
+        return _oauth_error_redirect("google_not_configured")
+
+    try:
+        token_response = requests.post(
+            GOOGLE_OAUTH_TOKEN_URL,
+            data={
+                "code": code,
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "redirect_uri": redirect_uri,
+                "grant_type": "authorization_code",
+            },
+            timeout=20,
+        )
+        token_payload = token_response.json() if token_response.content else {}
+        if not token_response.ok:
+            return _oauth_error_redirect("google_token_exchange_failed")
+
+        access_token = str(token_payload.get("access_token", "") or "")
+        if not access_token:
+            return _oauth_error_redirect("google_missing_access_token")
+
+        profile_response = requests.get(
+            GOOGLE_OAUTH_USERINFO_URL,
+            headers={"Authorization": f"Bearer {access_token}"},
+            timeout=20,
+        )
+        profile_payload = profile_response.json() if profile_response.content else {}
+        if not profile_response.ok:
+            return _oauth_error_redirect("google_profile_fetch_failed")
+
+        email = auth.normalize_email(str(profile_payload.get("email", "") or ""))
+        verified = bool(profile_payload.get("email_verified", False))
+        if not EMAIL_PATTERN.match(email) or not verified:
+            return _oauth_error_redirect("google_invalid_email")
+
+        full_name = str(profile_payload.get("name", "") or "").strip()
+        if not full_name:
+            full_name = email.split("@", 1)[0].replace(".", " ").title() or "Google User"
+
+        with session_scope() as db:
+            user = db.query(User).filter(User.email == email).first()
+            if not user:
+                user = User(
+                    full_name=full_name,
+                    email=email,
+                    password_hash=auth.hash_password(secrets.token_urlsafe(32)),
+                )
+                db.add(user)
+                db.commit()
+                db.refresh(user)
+            login_target = user
+
+        auth.login_user(login_target)
+        return redirect(next_url)
+    except Exception:
+        return _oauth_error_redirect("google_callback_failed")
 
 
 @web_blueprint.get("/dashboard")
@@ -372,6 +538,34 @@ def result_page():
 def result_page_html():
     """Backward-compatible result URL alias."""
     return redirect(url_for("web.result_page"))
+
+
+@web_blueprint.get("/history")
+@auth.login_required
+def history_page():
+    """Render history page."""
+    return render_template("history.html")
+
+
+@web_blueprint.get("/history.html")
+@auth.login_required
+def history_page_html():
+    """Backward-compatible history URL alias."""
+    return redirect(url_for("web.history_page"))
+
+
+@web_blueprint.get("/settings")
+@auth.login_required
+def settings_page():
+    """Render settings page."""
+    return render_template("settings.html")
+
+
+@web_blueprint.get("/settings.html")
+@auth.login_required
+def settings_page_html():
+    """Backward-compatible settings URL alias."""
+    return redirect(url_for("web.settings_page"))
 
 
 @web_blueprint.get("/favicon.ico")

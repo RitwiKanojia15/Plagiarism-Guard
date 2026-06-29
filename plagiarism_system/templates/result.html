@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Plagiarism AI Detector - Results</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <title>PlagAI Check - Reports</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
@@ -14,35 +14,34 @@
     <div class="dash-shell">
         <aside class="dash-sidebar">
             <div class="dash-brand">
-                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
-                <div>
-                    <div class="dash-brand-title">Plagiarism Guard</div>
-                    
-                </div>
+                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260404') }}" alt="PG logo">
+                <div class="dash-brand-title">PlagAI Check</div>
             </div>
 
             <nav class="dash-nav">
-                <a class="dash-link" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
-                <a class="dash-link" href="{{ url_for('web.upload_page') }}">Upload</a>
-                <a class="dash-link active" href="{{ url_for('web.result_page') }}">Results</a>
-                <a class="dash-link" href="{{ url_for('web.dashboard_page') }}#about">About</a>
+                <a class="dash-link dash-link-dashboard" href="{{ url_for('web.dashboard_page') }}"><span class="dash-link-icon">D</span><span class="dash-link-label">Dashboard</span></a>
+                <a class="dash-link dash-link-new-scan" href="{{ url_for('web.upload_page') }}"><span class="dash-link-icon">N</span><span class="dash-link-label">New Scan</span></a>
+                <a class="dash-link dash-link-reports active" href="{{ url_for('web.result_page') }}"><span class="dash-link-icon">R</span><span class="dash-link-label">Reports</span></a>
+                <a class="dash-link dash-link-history" href="{{ url_for('web.history_page') }}"><span class="dash-link-icon">H</span><span class="dash-link-label">History</span></a>
+                <a class="dash-link dash-link-settings" href="{{ url_for('web.settings_page') }}"><span class="dash-link-icon">S</span><span class="dash-link-label">Settings</span></a>
             </nav>
 
             <div class="dash-side-status">
-                <p class="small">Review similarity, AI likelihood, and sentence explanations.</p>
+                <p class="small">Review copied, paraphrased, AI-likely and unique sentence labels.</p>
             </div>
-            <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
             <button class="btn btn-secondary btn-sm dash-logout" id="logoutBtn" type="button">Logout</button>
         </aside>
 
         <main class="dash-main">
             <section class="dash-hero">
-                <span class="hero-kicker">Analysis Output</span>
+                <div class="dash-hero-top">
+                    <span class="hero-kicker">Reports</span>
+                </div>
                 <h1>Analysis Report</h1>
-                <p>Structured plagiarism, paraphrase, AI-likelihood, and explainability output.</p>
+                <p>Hybrid plagiarism + AI detection output with explainable feature insights.</p>
                 <div class="nav-row">
                     <a class="btn btn-secondary" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
-                    <a class="btn btn-primary" href="{{ url_for('web.upload_page') }}">New Analysis</a>
+                    <a class="btn btn-primary" href="{{ url_for('web.upload_page') }}">New Scan</a>
                     <a class="btn btn-secondary hidden" id="downloadPdfBtn" href="#" target="_blank" rel="noopener">Download Analysis PDF</a>
                 </div>
             </section>
@@ -126,6 +125,13 @@
             </section>
 
             <div id="resultStatus" class="status"></div>
+
+            <footer class="app-footer">
+                <a href="{{ url_for('web.dashboard_page') }}#about">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </footer>
         </main>
     </div>
 
@@ -133,4 +139,3 @@
     <script src="{{ url_for('static', filename='js/result.js') }}"></script>
 </body>
 </html>
-

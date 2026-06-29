@@ -12,7 +12,7 @@ function storedTheme() {
 }
 
 function systemPreferredTheme() {
-    return window.matchMedia("(prefers-color-scheme: light)").matches ? LIGHT_THEME : DARK_THEME;
+    return LIGHT_THEME;
 }
 
 function activeTheme() {

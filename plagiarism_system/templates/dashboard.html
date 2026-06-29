@@ -1,28 +1,27 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Plagiarism AI Detector - Dashboard</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260216') }}">
+    <title>PlagAI Check - Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/PG.png', v='20260404') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="dashboard-v2">
     <div class="dash-shell">
         <aside class="dash-sidebar">
             <div class="dash-brand">
-                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260216') }}" alt="PG logo">
-                <div>
-                    <div class="dash-brand-title">Plagiarism Guard</div>
-                </div>
+                <img class="dash-logo" src="{{ url_for('static', filename='assets/PG.png', v='20260404') }}" alt="PG logo">
+                <div class="dash-brand-title">PlagAI Check</div>
             </div>
 
             <nav class="dash-nav">
-                <a class="dash-link active" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
-                <a class="dash-link" href="{{ url_for('web.upload_page') }}">Upload</a>
-                <a class="dash-link" href="{{ url_for('web.result_page') }}">Results</a>
-                <a class="dash-link" href="#about">About</a>
+                <a class="dash-link dash-link-dashboard active" href="{{ url_for('web.dashboard_page') }}"><span class="dash-link-icon">D</span><span class="dash-link-label">Dashboard</span></a>
+                <a class="dash-link dash-link-new-scan" href="{{ url_for('web.upload_page') }}"><span class="dash-link-icon">N</span><span class="dash-link-label">New Scan</span></a>
+                <a class="dash-link dash-link-reports" href="{{ url_for('web.result_page') }}"><span class="dash-link-icon">R</span><span class="dash-link-label">Reports</span></a>
+                <a class="dash-link dash-link-history" href="{{ url_for('web.history_page') }}"><span class="dash-link-icon">H</span><span class="dash-link-label">History</span></a>
+                <a class="dash-link dash-link-settings" href="{{ url_for('web.settings_page') }}"><span class="dash-link-icon">S</span><span class="dash-link-label">Settings</span></a>
             </nav>
 
             <div class="dash-side-status" id="healthStatus"></div>
@@ -34,12 +33,11 @@
                 <div class="dash-hero-top">
                     <span class="hero-kicker">Dashboard</span>
                     <div class="dash-hero-controls">
-                        <button class="btn btn-secondary btn-sm theme-toggle-btn" data-theme-toggle="true" type="button">Switch to Light</button>
                         <div class="profile-menu" id="profileMenu">
                             <button class="profile-menu-trigger" id="profileMenuBtn" type="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="profile-avatar" id="profileAvatar">U</span>
                                 <span class="profile-trigger-name" id="profileTriggerName">Profile</span>
-                                <span class="profile-caret" aria-hidden="true">▼</span>
+                                <span class="profile-caret" aria-hidden="true">v</span>
                             </button>
                             <div class="profile-dropdown" id="profileDropdown">
                                 <div class="profile-dropdown-head">
@@ -50,22 +48,36 @@
                                     </div>
                                 </div>
                                 <a class="profile-link" href="{{ url_for('web.dashboard_page') }}">Dashboard</a>
-                                <a class="profile-link" href="{{ url_for('web.upload_page') }}">Upload</a>
-                                <a class="profile-link" href="{{ url_for('web.result_page') }}">Results</a>
+                                <a class="profile-link" href="{{ url_for('web.upload_page') }}">New Scan</a>
+                                <a class="profile-link" href="{{ url_for('web.result_page') }}">Reports</a>
+                                <a class="profile-link" href="{{ url_for('web.history_page') }}">History</a>
+                                <a class="profile-link" href="{{ url_for('web.settings_page') }}">Settings</a>
                                 <button class="profile-logout" data-logout-btn="true" type="button">Logout</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <h1 id="welcomeTitle">Welcome</h1>
-                <p id="welcomeSubtext">
-                    Research-level analysis pipeline combining lexical, semantic, stylometric,
-                    AI ensemble, citation-aware scoring, and explainability.
-                </p>
+                <p id="welcomeSubtext">Signed in. Run plagiarism and AI scans from New Scan.</p>
                 <div class="nav-row">
-                    <a class="btn btn-primary" href="{{ url_for('web.upload_page') }}">Upload & Analyze</a>
-                    <a class="btn btn-secondary" href="{{ url_for('web.result_page') }}">View Last Result</a>
+                    <a class="btn btn-primary" href="{{ url_for('web.upload_page') }}">Start New Scan</a>
+                    <a class="btn btn-secondary" href="{{ url_for('web.result_page') }}">View Reports</a>
                 </div>
+            </section>
+
+            <section class="dash-kpi-grid">
+                <article class="kpi-card">
+                    <div class="kpi-title">Detection Engines</div>
+                    <div class="kpi-value">Lexical + Semantic + AI</div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-title">Supported Files</div>
+                    <div class="kpi-value">PDF, DOC, DOCX, TXT</div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-title">Output Labels</div>
+                    <div class="kpi-value">Copied, Paraphrased, AI, Unique</div>
+                </article>
             </section>
 
             <section class="dash-panel">
@@ -78,17 +90,20 @@
 
             <section id="about" class="dash-panel">
                 <div class="dash-panel-head">
-                    <h3>About Plagiarism Guard</h3>
+                    <h3>About</h3>
                 </div>
                 <p class="small">
-                    Plagiarism Guard is a hybrid analysis platform that combines lexical matching, semantic similarity,
-                    stylometric profiling, and AI-writing detection into one workflow.
-                </p>
-                <p class="small">
-                    It supports PDF/DOC/DOCX/TXT inputs, reference-aware plagiarism checks, AI-only analysis mode,
-                    sentence-level labeling (Copied, Paraphrased, AI-likely, Unique), and downloadable PDF reports.
+                    PlagAI Check combines exact overlap matching, semantic paraphrase detection, stylometric profiling,
+                    and AI-likelihood scoring into one workflow with sentence-level evidence.
                 </p>
             </section>
+
+            <footer class="app-footer">
+                <a href="#about">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </footer>
         </main>
     </div>
 

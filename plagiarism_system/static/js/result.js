@@ -16,7 +16,7 @@ function applyChartDefaults() {
     const light = isLightTheme();
     Chart.defaults.color = light ? "#334155" : "#cfe0fb";
     Chart.defaults.borderColor = light ? "rgba(123, 151, 192, 0.45)" : "rgba(114, 146, 197, 0.35)";
-    Chart.defaults.font.family = "'Share Tech Mono', 'JetBrains Mono', monospace";
+    Chart.defaults.font.family = "'Manrope', 'Segoe UI', sans-serif";
 }
 applyChartDefaults();
 
