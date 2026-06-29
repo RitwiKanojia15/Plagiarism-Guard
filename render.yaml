@@ -4,13 +4,15 @@ services:
     runtime: python
     region: oregon
     plan: starter
-    buildCommand: pip install -r plagiarism_system/requirements.txt
+    buildCommand: pip install -r plagiarism_system/requirements-prod.txt
     startCommand: python plagiarism_system/run.py
     envVars:
       - key: PLAGIARISM_SYSTEM_SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
         value: 3.11.9
+      - key: PLAGIARISM_DISABLE_TORCH
+        value: "1"
     disk:
       name: data
       mountPath: /data
